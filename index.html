@@ -358,10 +358,10 @@ footer { padding:30px 0 42px; border-top:1px solid rgba(255,255,255,.07); }
 <body>
 
 <!-- Dayline background music -->
-<button class="music-player" id="musicPlayer" type="button" aria-label="Pause background music">
+<button class="music-player" id="musicPlayer" type="button" aria-label="Play music">
   <span class="music-icon" id="musicIcon">❚❚</span>
   <span class="music-text">
-    <span class="music-title">Rain on My Window — Undercurrent</span>
+    <span class="music-title">Play Music</span>
     <span class="music-status" id="musicStatus">Playing</span>
   </span>
 </button>
@@ -558,7 +558,7 @@ document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
     const playing = !audio.paused;
     icon.textContent = playing ? '❚❚' : '▶';
     status.textContent = playing ? 'Playing' : 'Paused';
-    button.setAttribute('aria-label', playing ? 'Pause background music' : 'Play background music');
+    button.setAttribute('aria-label', playing ? 'Pause music' : 'Play music');
   }
 
   async function startMusic() {
