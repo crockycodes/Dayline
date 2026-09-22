@@ -362,7 +362,7 @@ footer { padding:30px 0 42px; border-top:1px solid rgba(255,255,255,.07); }
   <span class="music-icon" id="musicIcon">❚❚</span>
   <span class="music-text">
     <span class="music-title">Play Music</span>
-    <span class="music-status" id="musicStatus">Playing</span>
+    <span class="music-status" id="musicStatus">Play Music</span>
   </span>
 </button>
 <audio id="backgroundMusic" src="rain-on-my-window-undercurrent.mp3" autoplay loop preload="auto"></audio>
@@ -556,24 +556,27 @@ document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
 
   function updateMusicUI() {
     const playing = !audio.paused;
+    status.textContent = playing ? 'Pause Music' : 'Play Music';
     icon.textContent = playing ? '❚❚' : '▶';
-    status.textContent = playing ? 'Playing' : 'Paused';
     button.setAttribute('aria-label', playing ? 'Pause music' : 'Play music');
   }
 
-  async function startMusic() {
-    try {
-      await audio.play();
-    } catch (e) {
-      // Browsers may block audible autoplay until the user interacts with the page.
-      status.textContent = 'Click to play';
-    }
-    updateMusicUI();
-  }
+  // Try autoplay on page load. Browsers may block sound until the visitor interacts.
+  audio.play().then(updateMusicUI).catch(updateMusicUI);
 
-  button.addEventListener('click', async () => {
+  // If autoplay was blocked, the first click anywhere starts the music.
+  document.addEventListener('click', () => {
     if (audio.paused) {
-      try { await audio.play(); } catch (e) {}
+      audio.play().then(updateMusicUI).catch(updateMusicUI);
+    }
+  }, { once: true });
+
+  button.addEventListener('click', async (event) => {
+    event.stopPropagation();
+    if (audio.paused) {
+      try {
+        await audio.play();
+      } catch (e) {}
     } else {
       audio.pause();
     }
